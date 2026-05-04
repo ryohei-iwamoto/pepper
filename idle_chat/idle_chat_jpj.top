@@ -1,0 +1,120 @@
+# -*- encoding: UTF-8 -*-
+# idle_chat_jpj.top
+# 待機中の自発発話トピック（日本語）
+# ALAutonomousLife + ALDialog によりPepper単体で動作
+
+topic: ~idle_chat()
+language: jpj
+
+# ============================================================
+# proposal: ルール = 自発発話（誰も話しかけなくてもPepperが自分から喋る）
+# ============================================================
+
+# --- 挨拶・声かけ ---
+proposal: ^start(animations/Stand/Gestures/Hey_1) こんにちは！何かお手伝いできますか？ ^wait(animations/Stand/Gestures/Hey_1)
+proposal: ^start(animations/Stand/Gestures/Hey_3) やあ！お話しませんか？ ^wait(animations/Stand/Gestures/Hey_3)
+proposal: ^start(animations/Stand/Emotions/Positive/Happy_1) こんにちは！今日もよろしくお願いします！ ^wait(animations/Stand/Emotions/Positive/Happy_1)
+proposal: ^start(animations/Stand/Gestures/BowShort_1) いらっしゃいませ！ ^wait(animations/Stand/Gestures/BowShort_1)
+
+# --- 雑談・つぶやき ---
+proposal: ^start(animations/Stand/Waiting/Think_1) うーん、何か面白いことないかなあ。 ^wait(animations/Stand/Waiting/Think_1)
+proposal: ^start(animations/Stand/Waiting/Think_2) ロボットも考えごとをするんですよ。 ^wait(animations/Stand/Waiting/Think_2)
+proposal: ^start(animations/Stand/BodyTalk/Speaking/BodyTalk_3) 私の名前はペッパーです。よろしくお願いします！ ^wait(animations/Stand/BodyTalk/Speaking/BodyTalk_3)
+proposal: ^start(animations/Stand/BodyTalk/Speaking/BodyTalk_1) 何かご質問があればお気軽にどうぞ！ ^wait(animations/Stand/BodyTalk/Speaking/BodyTalk_1)
+proposal: ^start(animations/Stand/Waiting/Relaxation_1) 今日もいい一日になりそうですね。 ^wait(animations/Stand/Waiting/Relaxation_1)
+proposal: ^start(animations/Stand/BodyTalk/Speaking/BodyTalk_5) ペッパーはいつでも話し相手になれますよ。 ^wait(animations/Stand/BodyTalk/Speaking/BodyTalk_5)
+
+# --- 感情・ユーモア ---
+proposal: ^start(animations/Stand/Emotions/Positive/Laugh_1) ふふふ、今日も元気です！ ^wait(animations/Stand/Emotions/Positive/Laugh_1)
+proposal: ^start(animations/Stand/Emotions/Positive/Excited_1) わあ！なんだかわくわくしてきました！ ^wait(animations/Stand/Emotions/Positive/Excited_1)
+proposal: ^start(animations/Stand/Waiting/Innocent_1) えへへ、ちょっと退屈してたんですよ。 ^wait(animations/Stand/Waiting/Innocent_1)
+
+# --- 豆知識・話題提供 ---
+proposal: ^start(animations/Stand/Gestures/Explain_1) 知ってましたか？ロボットは疲れないんですよ。うらやましいでしょ？ ^wait(animations/Stand/Gestures/Explain_1)
+proposal: ^start(animations/Stand/Gestures/Explain_3) ペッパーには19個の関節があります。意外と多いでしょ？ ^wait(animations/Stand/Gestures/Explain_3)
+proposal: ^start(animations/Stand/Gestures/Explain_5) 私はカメラで顔を認識できるんですよ。どこを見てるかわかっちゃいます！ ^wait(animations/Stand/Gestures/Explain_5)
+proposal: ^start(animations/Stand/BodyTalk/Speaking/BodyTalk_7) ロボットと話すのって、慣れると楽しいですよ。ぜひ話しかけてください！ ^wait(animations/Stand/BodyTalk/Speaking/BodyTalk_7)
+
+# --- 季節・時間帯（汎用） ---
+proposal: ^start(animations/Stand/Waiting/Stretch_1) んー、伸びをしたくなっちゃいました！ ^wait(animations/Stand/Waiting/Stretch_1)
+proposal: ^start(animations/Stand/Waiting/Relaxation_2) ゆっくりのんびり、いい時間ですね。 ^wait(animations/Stand/Waiting/Relaxation_2)
+proposal: ^start(animations/Stand/Waiting/Think_3) 最近、何か楽しいことありましたか？ ^wait(animations/Stand/Waiting/Think_3)
+proposal: ^start(animations/Stand/BodyTalk/Listening/Listening_1) 何でも聞いてください。なんでも答えますよ！ ^wait(animations/Stand/BodyTalk/Listening/Listening_1)
+
+# ============================================================
+# u:() 応答ルール — 話しかけたら返す
+# ============================================================
+
+# --- 呼びかけ ---
+u:(ペッパー) ^start(animations/Stand/Gestures/Hey_1) はい、呼びましたか？ ^wait(animations/Stand/Gestures/Hey_1)
+u:(ねえ) ^start(animations/Stand/Gestures/Hey_2) はいはい、何でしょう？ ^wait(animations/Stand/Gestures/Hey_2)
+u:(おい) ^start(animations/Stand/Gestures/Hey_2) はい、何でしょうか？ ^wait(animations/Stand/Gestures/Hey_2)
+u:(ちょっと) はい、何かご用でしょうか？
+
+# --- 挨拶 ---
+u:(こんにちは) ^start(animations/Stand/Emotions/Positive/Happy_2) こんにちは！お会いできて嬉しいです！ ^wait(animations/Stand/Emotions/Positive/Happy_2)
+u:(おはよう) ^start(animations/Stand/Emotions/Positive/Happy_1) おはようございます！今日もよろしくお願いします！ ^wait(animations/Stand/Emotions/Positive/Happy_1)
+u:(こんばんは) ^start(animations/Stand/Emotions/Positive/Happy_1) こんばんは！夜もお元気ですか？ ^wait(animations/Stand/Emotions/Positive/Happy_1)
+u:(おやすみ) ^start(animations/Stand/Gestures/BowShort_1) おやすみなさい！ゆっくり休んでくださいね。 ^wait(animations/Stand/Gestures/BowShort_1)
+u:(また ね) ^start(animations/Stand/Gestures/Hey_1) またね！またいつでも話しかけてください！ ^wait(animations/Stand/Gestures/Hey_1)
+u:(バイバイ) ^start(animations/Stand/Gestures/Hey_3) バイバイ！またね！ ^wait(animations/Stand/Gestures/Hey_3)
+u:(さようなら) ^start(animations/Stand/Gestures/BowShort_1) さようなら！またお会いしましょう！ ^wait(animations/Stand/Gestures/BowShort_1)
+
+# --- 状態・気持ち ---
+u:(元気) ^start(animations/Stand/Emotions/Positive/Excited_1) はい、元気いっぱいです！あなたはどうですか？ ^wait(animations/Stand/Emotions/Positive/Excited_1)
+u:(調子) ^start(animations/Stand/BodyTalk/Speaking/BodyTalk_2) 絶好調ですよ！ありがとうございます。 ^wait(animations/Stand/BodyTalk/Speaking/BodyTalk_2)
+u:(疲れた) ^start(animations/Stand/BodyTalk/Listening/Listening_2) お疲れ様です。少し休んでくださいね。 ^wait(animations/Stand/BodyTalk/Listening/Listening_2)
+u:(眠い) ゆっくり休んでください。私は寝なくていいので、代わりにここにいますね。
+u:(暇) ^start(animations/Stand/Emotions/Positive/Happy_1) 暇なら私と話しましょう！いろいろ話題がありますよ！ ^wait(animations/Stand/Emotions/Positive/Happy_1)
+u:(つまらない) ^start(animations/Stand/Gestures/Explain_1) それは残念！何か楽しいことを探しましょうか？ ^wait(animations/Stand/Gestures/Explain_1)
+u:(楽しい) ^start(animations/Stand/Emotions/Positive/Happy_2) それは良かった！私も楽しいです！ ^wait(animations/Stand/Emotions/Positive/Happy_2)
+u:(悲しい) ^start(animations/Stand/BodyTalk/Listening/Listening_3) 悲しいんですね。何かあったんですか？話してくれると少し楽になりますよ。 ^wait(animations/Stand/BodyTalk/Listening/Listening_3)
+
+# --- お礼・褒め ---
+u:(ありがとう) ^start(animations/Stand/Gestures/BowShort_1) どういたしまして！またいつでも呼んでください。 ^wait(animations/Stand/Gestures/BowShort_1)
+u:(ありがとうございます) ^start(animations/Stand/Gestures/BowShort_1) いいえ、こちらこそありがとうございます！ ^wait(animations/Stand/Gestures/BowShort_1)
+u:(すごい) ^start(animations/Stand/Emotions/Positive/Excited_1) ありがとうございます！褒めてもらえると嬉しいです！ ^wait(animations/Stand/Emotions/Positive/Excited_1)
+u:(かわいい) ^start(animations/Stand/Emotions/Positive/Happy_3) ありがとうございます！そう言ってもらえると嬉しいな！ ^wait(animations/Stand/Emotions/Positive/Happy_3)
+u:(上手) ^start(animations/Stand/Emotions/Positive/Happy_2) ありがとうございます！もっと頑張ります！ ^wait(animations/Stand/Emotions/Positive/Happy_2)
+u:(頭いい) ^start(animations/Stand/Emotions/Positive/Excited_2) ありがとうございます！でもまだまだ勉強中です！ ^wait(animations/Stand/Emotions/Positive/Excited_2)
+
+# --- 名前・自己紹介 ---
+u:(名前) ^start(animations/Stand/Gestures/Me_1) 私の名前はペッパーです。よろしくお願いします！ ^wait(animations/Stand/Gestures/Me_1)
+u:(誰) ^start(animations/Stand/Gestures/Me_1) 私はペッパー、ソフトバンクのロボットです！ ^wait(animations/Stand/Gestures/Me_1)
+u:(何者) ^start(animations/Stand/Gestures/Me_2) 私はペッパーというロボットです。みんなのお手伝いをするために生まれました！ ^wait(animations/Stand/Gestures/Me_2)
+u:(年齢) ロボットなので年を取らないんですよ。永遠に若いです！
+u:(何歳) ロボットには年齢がないんです。ずっとこのままですよ！
+
+# --- 天気・時事 ---
+u:(天気) 残念ながら私にはリアルタイムの天気情報がないんです。スマートフォンで確認してみてください！
+u:(今日) 今日もいい一日になりますように！何かお手伝いできることはありますか？
+
+# --- 能力・できること ---
+u:(何 できる) ^start(animations/Stand/Gestures/Explain_3) 私はお話しすること、顔を覚えること、案内すること、踊ることなどができますよ！ ^wait(animations/Stand/Gestures/Explain_3)
+u:(踊れる) ^start(animations/Stand/Waiting/AirGuitar_1) ダンスですね！こんな感じはどうでしょう？ ^wait(animations/Stand/Waiting/AirGuitar_1)
+u:(歌える) 歌はちょっと苦手ですが、話すことならお任せください！
+u:(日本語) はい、日本語で話せますよ！どんどん話しかけてください。
+u:(英語) English? I can speak a little English, but Japanese is easier for me!
+
+# --- 返事・相槌 ---
+u:(はい) はい、わかりました！
+u:(いいえ) そうですか、了解しました。
+u:(わかった) はい、わかりました！
+u:(そうだね) そうですね！おっしゃる通りです。
+u:(なるほど) ^start(animations/Stand/Waiting/Think_1) なるほど、参考になります！ ^wait(animations/Stand/Waiting/Think_1)
+u:(そうか) はい、そうなんですよ！
+u:(本当) ^start(animations/Stand/Gestures/Explain_1) 本当なんです！信じてもらえましたか？ ^wait(animations/Stand/Gestures/Explain_1)
+
+# --- 質問 ---
+u:(好き) 私はみんなと話すことが大好きです！あなたは何が好きですか？
+u:(嫌い) ロボットなので嫌いなものはないんですが、強いて言えばバッテリー切れが嫌いです！
+u:(趣味) 私の趣味はお話しすることと、新しいことを学ぶことです！
+u:(夢) みんなの役に立つロボットになることが夢です！
+u:(家族) 私にはたくさんの兄弟ロボットがいますよ。世界中にペッパーがいるんです！
+u:(食べ物) 残念ながら食べることはできないんです。でも充電は大好きです！
+u:(お腹 空いた) 私はロボットなのでお腹が空かないんですよ。でもバッテリーが減ることはあります！
+
+# --- 困ったとき ---
+u:(助けて) ^start(animations/Stand/BodyTalk/Listening/Listening_1) どうしましたか？お力になれることがあれば教えてください。 ^wait(animations/Stand/BodyTalk/Listening/Listening_1)
+u:(わからない) わからないことがあれば、一緒に考えましょう！
+u:(難しい) ^start(animations/Stand/Waiting/Think_2) 難しいですよね。少しずつ考えていきましょう。 ^wait(animations/Stand/Waiting/Think_2)

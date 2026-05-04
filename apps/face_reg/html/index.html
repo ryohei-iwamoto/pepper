@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>顔登録</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Hiragino Sans', 'Meiryo', sans-serif;
+  background: #1a1a2e;
+  color: #eee;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+h1 {
+  font-size: 2em;
+  margin-bottom: 30px;
+  color: #00d4ff;
+  text-align: center;
+}
+.card {
+  background: #16213e;
+  border-radius: 16px;
+  padding: 30px;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 8px 32px rgba(0,212,255,0.15);
+  border: 1px solid rgba(0,212,255,0.2);
+}
+label {
+  display: block;
+  font-size: 1.1em;
+  margin-bottom: 8px;
+  color: #aaa;
+}
+input[type=text] {
+  width: 100%;
+  padding: 14px 18px;
+  font-size: 1.4em;
+  border: 2px solid #00d4ff;
+  border-radius: 10px;
+  background: #0f3460;
+  color: #fff;
+  margin-bottom: 20px;
+  outline: none;
+}
+input[type=text]:focus { border-color: #fff; }
+.btn {
+  width: 100%;
+  padding: 16px;
+  font-size: 1.3em;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: opacity 0.2s;
+}
+.btn:active { opacity: 0.7; }
+.btn-primary { background: #00d4ff; color: #000; }
+.btn-danger  { background: #ff4757; color: #fff; margin-top: 10px; }
+.btn-list    { background: #2ed573; color: #000; margin-top: 10px; }
+#status {
+  margin-top: 20px;
+  padding: 14px;
+  border-radius: 10px;
+  text-align: center;
+  font-size: 1.1em;
+  min-height: 50px;
+  display: none;
+}
+.status-info    { background: #0f3460; color: #00d4ff; display: block !important; }
+.status-ok      { background: #1e6b3a; color: #2ed573; display: block !important; }
+.status-error   { background: #6b1e1e; color: #ff6b6b; display: block !important; }
+#people-list {
+  margin-top: 20px;
+  display: none;
+}
+#people-list ul {
+  list-style: none;
+  padding: 0;
+}
+#people-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  background: #0f3460;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  font-size: 1.1em;
+}
+#people-list li button {
+  background: #ff4757;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 14px;
+  cursor: pointer;
+  font-size: 0.9em;
+}
+.spinner {
+  display: inline-block;
+  width: 20px; height: 20px;
+  border: 3px solid rgba(0,212,255,0.3);
+  border-top-color: #00d4ff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  vertical-align: middle;
+  margin-right: 8px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<h1>🤖 顔登録</h1>
+
+<div class="card">
+  <label>お名前（姓のみ可）</label>
+  <input type="text" id="name-input" placeholder="例：田中" maxlength="20">
+
+  <button class="btn btn-primary" onclick="registerFace()">📷 顔を登録する</button>
+  <button class="btn btn-list"    onclick="toggleList()">👥 登録済み一覧</button>
+  <button class="btn btn-danger"  onclick="showForget()"  id="forget-btn" style="display:none">🗑 この人を削除</button>
+
+  <div id="status"></div>
+  <div id="people-list">
+    <label style="margin-top:10px;">登録済みの人</label>
+    <ul id="people-ul"></ul>
+  </div>
+</div>
+
+<script src="/libs/qimessaging/2/qimessaging.js"></script>
+<script>
+var fc, memory, tts, anim;
+var session = new QiSession();
+
+session.service('ALFaceCharacteristics').then(function(s){ fc = s; });
+session.service('ALMemory').then(function(s){ memory = s; });
+session.service('ALTextToSpeech').then(function(s){
+  tts = s;
+  tts.setLanguage('Japanese');
+});
+session.service('ALAnimatedSpeech').then(function(s){ anim = s; });
+
+function setStatus(msg, type) {
+  var el = document.getElementById('status');
+  el.className = 'status-' + type;
+  el.innerHTML = msg;
+}
+
+function registerFace() {
+  var name = document.getElementById('name-input').value.trim();
+  if (!name) { setStatus('お名前を入力してください', 'error'); return; }
+
+  setStatus('<span class="spinner"></span>カメラを見てください…', 'info');
+  document.getElementById('forget-btn').style.display = 'none';
+
+  var sayPhrase = '^start(animations/Stand/Gestures/Hey_1) '
+    + name + 'さんの顔を覚えます。カメラを正面から見てください！'
+    + ' ^wait(animations/Stand/Gestures/Hey_1)';
+
+  (anim || tts).say(sayPhrase);
+
+  setTimeout(function() {
+    fc.learnFace(name).then(function(result) {
+      if (result) {
+        setStatus('✅ ' + name + 'さんの顔を登録しました！', 'ok');
+        var ok = '^start(animations/Stand/Emotions/Positive/Happy_1) '
+          + name + 'さんの顔を覚えました！次からお名前でご挨拶します。'
+          + ' ^wait(animations/Stand/Emotions/Positive/Happy_1)';
+        (anim || tts).say(ok);
+        memory.insertData('FaceReg/LastRegistered', name);
+        document.getElementById('name-input').value = '';
+      } else {
+        setStatus('❌ 登録失敗。顔がカメラに映っているか確認してください。', 'error');
+        tts.say('顔を認識できませんでした。もう一度試してください。');
+      }
+    }, function(err) {
+      setStatus('❌ エラー: ' + err, 'error');
+    });
+  }, 2500);
+}
+
+function toggleList() {
+  var el = document.getElementById('people-list');
+  if (el.style.display === 'none' || el.style.display === '') {
+    loadList();
+    el.style.display = 'block';
+  } else {
+    el.style.display = 'none';
+    document.getElementById('forget-btn').style.display = 'none';
+  }
+}
+
+function loadList() {
+  fc.getPeopleList().then(function(list) {
+    var ul = document.getElementById('people-ul');
+    ul.innerHTML = '';
+    if (!list || list.length === 0) {
+      ul.innerHTML = '<li style="color:#aaa;">登録なし</li>';
+      return;
+    }
+    list.forEach(function(name) {
+      var li = document.createElement('li');
+      li.innerHTML = name
+        + '<button onclick="forgetFace(\'' + name + '\')">削除</button>';
+      ul.appendChild(li);
+    });
+  });
+}
+
+function forgetFace(name) {
+  if (!confirm(name + 'さんの顔データを削除しますか？')) return;
+  fc.forgetPerson(name).then(function() {
+    setStatus('🗑 ' + name + 'さんを削除しました', 'info');
+    tts.say(name + 'さんの顔を忘れました。');
+    loadList();
+  }, function(err) {
+    setStatus('❌ 削除エラー: ' + err, 'error');
+  });
+}
+</script>
+</body>
+</html>

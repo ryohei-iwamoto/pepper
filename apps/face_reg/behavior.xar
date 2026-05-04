@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ChoregrapheProject xmlns="http://www.aldebaran-robotics.com/schema/choregraphe/project.xsd" xar_version="3">
+    <Box name="root" id="-1" localization="8" tooltip="" x="0" y="0">
+        <bitmap>media/images/box/root.png</bitmap>
+        <script language="4">
+            <content>
+                <![CDATA[
+class MyClass(GeneratedClass):
+    def __init__(self):
+        GeneratedClass.__init__(self)
+        self._tablet = None
+
+    def onLoad(self):
+        pass
+
+    def onUnload(self):
+        try:
+            if self._tablet:
+                self._tablet.hideWebview()
+        except:
+            pass
+
+    def onInput_onStart(self):
+        try:
+            motion  = ALProxy("ALMotion")
+            posture = ALProxy("ALRobotPosture")
+            motion.wakeUp()
+            posture.goToPosture("Stand", 0.5)
+        except Exception as e:
+            self.logger.warning("posture error: " + str(e))
+
+        try:
+            self._tablet = self.session().service("ALTabletService")
+            self._tablet.showWebview()
+            self._tablet.loadUrl("http://198.18.0.1/apps/face-reg-pepper/index.html")
+        except Exception as e:
+            self.logger.warning("tablet error: " + str(e))
+
+        try:
+            tts = ALProxy("ALTextToSpeech")
+            tts.setLanguage("Japanese")
+            animated = ALProxy("ALAnimatedSpeech")
+            animated.say("^start(animations/Stand/Gestures/Hey_1) 顔登録アプリを起動しました。タブレットで名前を入力して登録してください。 ^wait(animations/Stand/Gestures/Hey_1)")
+        except Exception as e:
+            self.logger.warning("tts error: " + str(e))
+
+    def onInput_onStop(self):
+        self.onUnload()
+        self.onStopped()
+                ]]>
+            </content>
+        </script>
+        <Input name="onLoad"     type="1" type_size="1" nature="0" inner="1" tooltip="" id="1" />
+        <Input name="onStart"    type="1" type_size="1" nature="2" inner="0" tooltip="" id="2" />
+        <Input name="onStop"     type="1" type_size="1" nature="3" inner="0" tooltip="" id="3" />
+        <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="" id="4" />
+    </Box>
+</ChoregrapheProject>

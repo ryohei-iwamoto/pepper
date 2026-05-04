@@ -1,0 +1,36 @@
+# ============================================================
+# Pepper × GPT プロジェクト — Python 3 依存パッケージ
+# ============================================================
+# セットアップ手順:
+#   python -m venv venv
+#   venv\Scripts\activate          # Windows
+#   pip install -r requirements.txt
+#
+# PyAudio が失敗する場合（Windows）:
+#   pip install pipwin
+#   pipwin install pyaudio
+# または wheel から直接:
+#   https://www.lfd.uci.edu/~gohlke/pythonlibs/#pyaudio
+# ============================================================
+
+# --- OpenAI (GPT・Whisper) ---
+openai>=1.0.0
+openai-whisper
+
+# --- 音声入力 ---
+pyaudio
+numpy
+
+# --- Whisper が必要とする機械学習ライブラリ ---
+# GPU なし (CPU のみ) の場合はそのまま
+# GPU (CUDA) がある場合: pip install torch --index-url https://download.pytorch.org/whl/cu121
+torch
+
+# --- 音声処理補助 ---
+scipy
+
+# --- 便利ツール ---
+tqdm
+
+# --- Pepper マイク（SSH/SFTP でPepperから音声ファイルを取得）---
+paramiko>=3.0.0

@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<package uuid="face-reg-pepper" version="0.0.1">
+  <names>
+    <name lang="ja_JP">顔登録</name>
+    <name lang="en_US">Face Registration</name>
+  </names>
+  <contents>
+    <behaviorContent path=".">
+      <nature>interactive</nature>
+      <names>
+        <name lang="ja_JP">顔登録</name>
+        <name lang="en_US">Face Registration</name>
+      </names>
+      <tags>
+        <tag lang="en_US">launcher</tag>
+      </tags>
+    </behaviorContent>
+  </contents>
+  <requirements>
+    <naoqiRequirement minVersion="2.3" maxVersion="2.3"/>
+  </requirements>
+</package>
