@@ -35,6 +35,8 @@ import time
 import argparse
 import json
 import re
+from conversation_state import ConversationState
+from pepper_expression import adapt_expression
 
 
 # ============================================================
@@ -322,7 +324,17 @@ class PepperClient:
 # ============================================================
 # GPT 呼び出し
 # ============================================================
-def call_gpt(client_openai, model, history, user_input):
+def call_gpt(client_openai, model, history, user_input, conversation_state=None):
+    """Backward-compatible API; state is supplied once per session by main()."""
+    if conversation_state is not None:
+        conversation_state.observe_user(user_input)
+    result = _call_gpt(client_openai, model, history, user_input, conversation_state)
+    if conversation_state is not None:
+        result = adapt_expression(result, conversation_state.snapshot())
+    return result
+
+
+def _call_gpt(client_openai, model, history, user_input, conversation_state=None):
     """
     GPT を呼び出して Pepper コマンド dict を返す。
 
@@ -338,9 +350,16 @@ def call_gpt(client_openai, model, history, user_input):
     history.append({"role": "user", "content": user_input})
     raw = ""
     try:
+        messages = list(history)
+        if conversation_state is not None:
+            messages.insert(1 if messages and messages[0]["role"] == "system" else 0,
+                            conversation_state.prompt_message())
+            memory = conversation_state.memory_message()
+            if memory is not None:
+                messages.insert(len(messages) - 1, memory)
         resp = client_openai.chat.completions.create(
             model=model,
-            messages=history,
+            messages=messages,
             max_tokens=MAX_TOKENS,
             temperature=0.8,
         )
@@ -934,7 +953,7 @@ def main():
     # OpenAI クライアント
     try:
         from openai import OpenAI
-        openai_client = OpenAI(api_key=api_key)
+        openai_client = OpenAI(api_key=api_key, timeout=20.0, max_retries=0)
     except ImportError:
         print("エラー: openai パッケージがありません。  pip install openai")
         runner.stop()
@@ -956,6 +975,7 @@ def main():
 
     # GPT 会話履歴
     history = [{"role": "system", "content": SYSTEM_PROMPT}]
+    conversation_state = ConversationState()
 
     mode_label = {
         "pepper_mic": f"Pepper マイク (最大{args.mic_duration}秒/発話)",
@@ -1059,7 +1079,7 @@ def main():
             def _run_gpt():
                 try:
                     gpt_result_box[0] = call_gpt(
-                        openai_client, args.model, history, user_input
+                        openai_client, args.model, history, user_input, conversation_state
                     )
                 except Exception as e:
                     print(f"GPT エラー: {e}")
@@ -1078,8 +1098,8 @@ def main():
                 "async":     True,
             }, timeout=5.0)
 
-            # GPT 結果を待つ（最大 20 秒）
-            gpt_done.wait(timeout=20.0)
+            # API側でタイムアウト。履歴を触るworkerが残ったまま次のターンを開始しない。
+            gpt_done.wait()
             result = gpt_result_box[0]
 
             if result is None:
